@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+#include <ctime>
+#include <map>
+
+int main() {
+    std::srand(std::time(0));
+    std::vector<int> numeros(100);
+
+    for (int i = 0; i < 100; ++i) {
+        numeros[i] = std::rand() % 100 + 1; // 1 a 100
+    }
+
+    // Ordenar
+    std::sort(numeros.begin(), numeros.end());
+    std::cout << "Lista Ordenada:\n";
+    for (int n : numeros) std::cout << n << " ";
+
+    // Verificar Repetidos
+    std::cout << "\n\nNumeros Repetidos:\n";
+    std::map<int, int> contagem;
+    for (int n : numeros) contagem[n]++;
+    bool tem_repetido = false;
+    for (auto const& [num, qtd] : contagem) {
+        if (qtd > 1) {
+            std::cout << num << " (aparece " << qtd << "x) ";
+            tem_repetido = true;
+        }
+    }
+    if (!tem_repetido) std::cout << "Nenhum numero repetido.";
+
+    // Remover Pares
+    numeros.erase(std::remove_if(numeros.begin(), numeros.end(), [](int n) {
+        return n % 2 == 0;
+    }), numeros.end());
+
+    std::cout << "\n\nLista sem Pares:\n";
+    for (int n : numeros) std::cout << n << " ";
+    std::cout << "\n";
+
+    return 0;
+}

@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <map>
+
+struct Piloto {
+    std::string nome;
+    std::string equipe;
+    int pontuacao;
+};
+
+void CadastrarPiloto(std::vector<Piloto>& lista, std::string nome, std::string equipe, int pontos) {
+    lista.push_back({nome, equipe, pontos});
+}
+
+void ExibirRanking(std::vector<Piloto> lista) {
+    std::sort(lista.begin(), lista.end(), [](const Piloto& a, const Piloto& b) {
+        return a.pontuacao > b.pontuacao;
+    });
+    std::cout << "\n--- RANKING ---\n";
+    for (const auto& p : lista) {
+        std::cout << p.nome << " (" << p.equipe << "): " << p.pontuacao << " pts\n";
+    }
+}
+
+double CalcularPontuacaoMedia(const std::vector<Piloto>& lista) {
+    double soma = 0;
+    for (const auto& p : lista) soma += p.pontuacao;
+    return soma / lista.size();
+}
+
+void ExibirMelhorEquipe(const std::vector<Piloto>& lista) {
+    std::map<std::string, int> pontosEquipe;
+    for (const auto& p : lista) {
+        pontosEquipe[p.equipe] += p.pontuacao;
+    }
+
+    std::string melhor;
+    int maior = -1;
+    for (const auto& [equipe, pontos] : pontosEquipe) {
+        if (pontos > maior) {
+            maior = pontos;
+            melhor = equipe;
+        }
+    }
+    std::cout << "\nMelhor Equipe: " << melhor << " com " << maior << " pontos.\n";
+}
+
+int main() {
+    std::vector<Piloto> pilotos;
+
+    // Cadastro fictício de 10 pilotos para simplificar a execução
+    CadastrarPiloto(pilotos, "Hamilton", "Mercedes", 85);
+    CadastrarPiloto(pilotos, "Russell", "Mercedes", 70);
+    CadastrarPiloto(pilotos, "Verstappen", "Red Bull", 100);
+    CadastrarPiloto(pilotos, "Perez", "Red Bull", 60);
+    CadastrarPiloto(pilotos, "Leclerc", "Ferrari", 90);
+    CadastrarPiloto(pilotos, "Sainz", "Ferrari", 75);
+    CadastrarPiloto(pilotos, "Norris", "McLaren", 80);
+    CadastrarPiloto(pilotos, "Piastri", "McLaren", 65);
+    CadastrarPiloto(pilotos, "Alonso", "Aston Martin", 50);
+    CadastrarPiloto(pilotos, "Stroll", "Aston Martin", 30);
+
+    ExibirRanking(pilotos);
+
+    double media = CalcularPontuacaoMedia(pilotos);
+    std::cout << "\nPontuacao Media do campeonato: " << media << "\n";
+
+    int acimaMedia = 0;
+    for (const auto& p : pilotos) {
+        if (p.pontuacao > media) acimaMedia++;
+    }
+    std::cout << "Pilotos acima da media: " << acimaMedia << "\n";
+
+    ExibirMelhorEquipe(pilotos);
+
+    return 0;
+}
+

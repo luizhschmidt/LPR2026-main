@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct Produto {
+    string Nome;
+    int Codigo;
+    double Preco;
+    int Quantidade;
+};
+
+int main() {
+    Produto produtos[3];
+    double valorTotalEstoque = 0.0;
+
+    for (int i = 0; i < 3; i++) {
+        cout << "\n--- Cadastro do Produto " << i + 1 << " ---\n";
+        cout << "Nome: ";
+        getline(cin >> ws, produtos[i].Nome);
+        cout << "Codigo: ";
+        cin >> produtos[i].Codigo;
+        cout << "Preco: R$ ";
+        cin >> produtos[i].Preco;
+        cout << "Quantidade em Estoque: ";
+        cin >> produtos[i].Quantidade;
+
+        valorTotalEstoque += (produtos[i].Preco * produtos[i].Quantidade);
+    }
+
+    // Exibição dos dados
+    cout << "\n=== Relatorio de Estoque ===\n";
+    for (int i = 0; i < 3; i++) {
+        double totalProduto = produtos[i].Preco * produtos[i].Quantidade;
+        cout << "Cod: " << produtos[i].Codigo << " | " << produtos[i].Nome 
+             << " | Qtd: " << produtos[i].Quantidade 
+             << " | Subtotal: R$ " << totalProduto << endl;
+    }
+
+    cout << "Valor Total em Estoque: R$ " << valorTotalEstoque << endl;
+
+    return 0;
+}

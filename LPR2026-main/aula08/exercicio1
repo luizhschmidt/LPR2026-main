@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct Filme {
+    string Titulo;
+    string Diretor;
+    int AnoLancamento;
+    int DuracaoMinutos;
+};
+
+int main() {
+    Filme filmes[3];
+
+    // Entrada de dados
+    for (int i = 0; i < 3; i++) {
+        cout << "\n Cadastro do Filme " << i + 1 << " \n";
+        cout << "Titulo: ";
+        getline(cin >> ws, filmes[i].Titulo);
+        cout << "Diretor: ";
+        getline(cin, filmes[i].Diretor);
+        cout << "Ano de Lancamento: ";
+        cin >> filmes[i].AnoLancamento;
+        cout << "Duracao (em minutos): ";
+        cin >> filmes[i].DuracaoMinutos;
+    }
+
+    // Exibição e busca pelo mais antigo
+    cout << "\n Filmes Cadastrados \n";
+    int indiceMaisAntigo = 0;
+
+    for (int i = 0; i < 3; i++) {
+        cout << "\nFilme: " << filmes[i].Titulo << endl;
+        cout << "Diretor: " << filmes[i].Diretor << endl;
+        cout << "Ano: " << filmes[i].AnoLancamento << " | Duracao: " << filmes[i].DuracaoMinutos << " min\n";
+
+        if (filmes[i].AnoLancamento < filmes[indiceMaisAntigo].AnoLancamento) {
+            indiceMaisAntigo = i;
+        }
+    }
+    
+    cout << "O filme mais antigo e: " << filmes[indiceMaisAntigo].Titulo 
+         << " (" << filmes[indiceMaisAntigo].AnoLancamento << ")\n";
+
+    return 0;
+}

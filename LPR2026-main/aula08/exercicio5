@@ -1,0 +1,212 @@
+using System;
+
+struct Chamado
+{
+    public int Numero;
+    public string Solicitante;
+    public string Setor;
+    public int Prioridade;
+    public string Status;   
+    public string Descricao;
+}
+
+class Program
+{
+    static Chamado[] chamados = new Chamado[10];
+    static int totalChamados = 0;
+
+    static void Main()
+    {
+        int opcao = 0;
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("=== SISTEMA DE CHAMADOS ===");
+            Console.WriteLine("1. Cadastrar Chamado (" + totalChamados + "/10)");
+            Console.WriteLine("2. Listar Chamados");
+            Console.WriteLine("3. Atualizar Status de Chamado");
+            Console.WriteLine("4. Exibir Estatísticas");
+            Console.WriteLine("5. Sair");
+            Console.Write("Escolha uma opção: ");
+
+            if (int.TryParse(Console.ReadLine(), out opcao))
+            {
+                switch (opcao)
+                {
+                    case 1:
+                        cadastrarChamado();
+                        break;
+                    case 2:
+                        listarChamados();
+                        break;
+                    case 3:
+                        atualizarStatus();
+                        break;
+                    case 4:
+                        estatisticas();
+                        break;
+                    case 5:
+                        Console.WriteLine("\nSaindo...");
+                        break;
+                    default:
+                        Console.WriteLine("\nOpção inválida!");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        } while (opcao != 5);
+    }
+
+    static void cadastrarChamado()
+    {
+        Console.Clear();
+        if (totalChamados >= 10)
+        {
+            Console.WriteLine("Capacidade máxima atingida (10 chamados).");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.WriteLine(" Cadastrar Novo Chamado");
+        Chamado c;
+        
+        Console.Write("Número do chamado: ");
+        int.TryParse(Console.ReadLine(), out c.Numero);
+        
+        Console.Write("Solicitante: ");
+        c.Solicitante = Console.ReadLine();
+        
+        Console.Write("Setor: ");
+        c.Setor = Console.ReadLine();
+        
+        do
+        {
+            Console.Write("Prioridade (1 - Baixa, 2 - Média, 3 - Alta): ");
+            int.TryParse(Console.ReadLine(), out c.Prioridade);
+        } while (c.Prioridade < 1 || c.Prioridade > 3);
+
+        c.Status = "Aberto";
+
+        Console.Write("Descrição do problema: ");
+        c.Descricao = Console.ReadLine();
+
+        chamados[totalChamados] = c;
+        totalChamados++;
+
+        Console.WriteLine("\nChamado registrado com status 'Aberto'!");
+        Console.ReadKey();
+    }
+
+    static void listarChamados()
+    {
+        Console.Clear();
+        if (totalChamados == 0)
+        {
+            Console.WriteLine("Nenhum chamado cadastrado.");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.WriteLine(" LISTAGEM DE CHAMADOS");
+        for (int i = 0; i < totalChamados; i++)
+        {
+            Console.WriteLine($"\nNº: {chamados[i].Numero} | Status: [{chamados[i].Status}]");
+            Console.WriteLine($"Solicitante: {chamados[i].Solicitante} | Setor: {chamados[i].Setor}");
+            Console.WriteLine($"Prioridade: {classificarPrioridade(chamados[i].Prioridade)}");
+            Console.WriteLine($"Descrição: {chamados[i].Descricao}");
+        }
+        Console.ReadKey();
+    }
+
+    static void atualizarStatus()
+    {
+        Console.Clear();
+        if (totalChamados == 0)
+        {
+            Console.WriteLine("Nenhum chamado cadastrado.");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.Write("Informe o número do chamado que deseja atualizar: ");
+        int num;
+        int.TryParse(Console.ReadLine(), out num);
+
+        int indiceAchado = -1;
+        for (int i = 0; i < totalChamados; i++)
+        {
+            if (chamados[i].Numero == num)
+            {
+                indiceAchado = i;
+                break;
+            }
+        }
+
+        if (indiceAchado == -1)
+        {
+            Console.WriteLine("Chamado não encontrado.");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.WriteLine($"\nChamado Nº {num} encontrado.");
+        Console.WriteLine("Selecione o novo Status:");
+        Console.WriteLine("1 - Em andamento");
+        Console.WriteLine("2 - Resolvido");
+        Console.WriteLine("3 - Cancelado");
+        Console.Write("Escolha: ");
+        
+        int op;
+        int.TryParse(Console.ReadLine(), out op);
+
+        switch (op)
+        {
+            case 1:
+                chamados[indiceAchado].Status = "Em andamento";
+                break;
+            case 2:
+                chamados[indiceAchado].Status = "Resolvido";
+                break;
+            case 3:
+                chamados[indiceAchado].Status = "Cancelado";
+                break;
+            default:
+                Console.WriteLine("Opção inválida. Nenhuma alteração foi feita.");
+                Console.ReadKey();
+                return;
+        }
+
+        Console.WriteLine("\nStatus atualizado com sucesso!");
+        Console.ReadKey();
+    }
+
+    static string classificarPrioridade(int prioridade)
+    {
+        if (prioridade == 1) return "Baixa";
+        if (prioridade == 2) return "Média";
+        if (prioridade == 3) return "Alta";
+        return "Desconhecida";
+    }
+
+    static void estatisticas()
+    {
+        Console.Clear();
+        int abertos = 0, emAndamento = 0, resolvidos = 0, cancelados = 0;
+
+        for (int i = 0; i < totalChamados; i++)
+        {
+            if (chamados[i].Status == "Aberto") abertos++;
+            else if (chamados[i].Status == "Em andamento") emAndamento++;
+            else if (chamados[i].Status == "Resolvido") resolvidos++;
+            else if (chamados[i].Status == "Cancelado") cancelados++;
+        }
+
+        Console.WriteLine(" ESTATÍSTICAS DOS CHAMADOS ");
+        Console.WriteLine($"Total cadastrados: {totalChamados}/10");
+        Console.WriteLine($"- Abertos: {abertos}");
+        Console.WriteLine($"- Em andamento: {emAndamento}");
+        Console.WriteLine($"- Resolvidos: {resolvidos}");
+        Console.WriteLine($"- Cancelados: {cancelados}");
+        Console.ReadKey();
+    }
+}

@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+struct Livro {
+    public string Titulo;
+    public string Autor;
+    public int AnoPublicacao;
+    public int QuantidadeDisponivel;
+
+    public Livro(string t, string a, int ano, int qtd) {
+        Titulo = t; Autor = a; AnoPublicacao = ano; QuantidadeDisponivel = qtd;
+    }
+}
+
+class Program {
+    static Dictionary<int, Livro> biblioteca = new Dictionary<int, Livro>();
+
+    static void CadastrarLivro(int codigo, string t, string a, int ano, int qtd) {
+        biblioteca[codigo] = new Livro(t, a, ano, qtd);
+    }
+
+    static void BuscarLivro(int codigo) {
+        if (biblioteca.TryGetValue(codigo, out Livro l)) {
+            Console.WriteLine($"[{codigo}] {l.Titulo} - Autor: {l.Autor} | Ano: {l.AnoPublicacao} | Qtd: {l.QuantidadeDisponivel}");
+        } else {
+            Console.WriteLine("Livro não encontrado!");
+        }
+    }
+
+    static void EmprestarLivro(int codigo) {
+        if (biblioteca.TryGetValue(codigo, out Livro l)) {
+            if (l.QuantidadeDisponivel > 0) {
+                l.QuantidadeDisponivel--;
+                biblioteca[codigo] = l; 
+                Console.WriteLine($"Empréstimo do livro '{l.Titulo}' realizado com sucesso!");
+            } else {
+                Console.WriteLine("Erro: Não há exemplares disponíveis!");
+            }
+        } else {
+            Console.WriteLine("Livro não encontrado!");
+        }
+    }
+
+    static void ExibirRelatorio() {
+        Console.WriteLine("\nRELATÓRIO DA BIBLIOTECA");
+        Console.WriteLine($"Total de livros cadastrados: {biblioteca.Count}");
+
+        var maisAntigo = biblioteca.Values.OrderBy(l => l.AnoPublicacao).First();
+        Console.WriteLine($"Livro mais antigo: {maisAntigo.Titulo} ({maisAntigo.AnoPublicacao})");
+
+        var maiorQtd = biblioteca.Values.OrderByDescending(l => l.QuantidadeDisponivel).First();
+        Console.WriteLine($"Livro com maior estoque: {maiorQtd.Titulo} ({maiorQtd.QuantidadeDisponivel} un.)");
+
+        Console.WriteLine("\nLivros por autor:");
+        var porAutor = biblioteca.Values.GroupBy(l => l.Autor);
+        foreach (var grupo in porAutor) {
+            Console.WriteLine($"- {grupo.Key}: {grupo.Count()} livro(s)");
+        }
+    }
+
+    static void Main() {
+        CadastrarLivro(101, "Dom Casmurro", "Machado de Assis", 1899, 5);
+        CadastrarLivro(102, "Memórias Póstumas", "Machado de Assis", 1881, 2);
+        CadastrarLivro(103, "O Hobbit", "J.R.R. Tolkien", 1937, 8);
+        CadastrarLivro(104, "1984", "George Orwell", 1949, 0);
+        CadastrarLivro(105, "A Revolução dos Bicho", "George Orwell", 1945, 4);
+        CadastrarLivro(106, "O Alquimista", "Paulo Coelho", 1988, 10);
+        CadastrarLivro(107, "Clean Code", "Robert C. Martin", 2008, 3);
+        CadastrarLivro(108, "O Silmarillion", "J.R.R. Tolkien", 1977, 1);
+        CadastrarLivro(109, "Duna", "Frank Herbert", 1965, 6);
+        CadastrarLivro(110, "Fundação", "Isaac Asimov", 1951, 7);
+
+  
+        Console.WriteLine("Busca");
+        BuscarLivro(103);
+
+        Console.WriteLine("\nEmpréstimo");
+        EmprestarLivro(104); 
+        EmprestarLivro(103); 
+
+        ExibirRelatorio();
+    }
+}

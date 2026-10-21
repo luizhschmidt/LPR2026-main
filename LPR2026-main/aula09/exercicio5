@@ -1,0 +1,26 @@
+using System;
+using System.Collections.Generic;
+
+class Program {
+    static void Main() {
+        Dictionary<string, string> jogos = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        Console.WriteLine("Cadastre 5 jogos e seus gêneros:");
+        for (int i = 0; i < 5; i++) {
+            Console.Write($"Jogo {i + 1}: ");
+            string nome = Console.ReadLine();
+            Console.Write($"Gênero do {nome}: ");
+            string genero = Console.ReadLine();
+            jogos[nome] = genero;
+        }
+
+        Console.Write("\nDigite o nome de um jogo para buscar: ");
+        string busca = Console.ReadLine();
+
+        if (jogos.TryGetValue(busca, out string g)) {
+            Console.WriteLine($"O gênero de '{busca}' é: {g}");
+        } else {
+            Console.WriteLine("Jogo não cadastrado!");
+        }
+    }
+}

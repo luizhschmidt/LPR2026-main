@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program {
+    static void Main() {
+        Dictionary<string, int> cidades = new Dictionary<string, int>() {
+            {"São Paulo", 12000000}, {"Rio de Janeiro", 6000000},
+            {"Curitiba", 1900000}, {"Belo Horizonte", 2500000}, {"Salvador", 2900000}
+        };
+
+        double media = cidades.Values.Average();
+        Console.WriteLine($"População Média: {media:N0}\n");
+
+        Console.WriteLine("Cidades acima da média populacional:");
+        foreach (var c in cidades.Where(c => c.Value > media)) {
+            Console.WriteLine($"- {c.Key}: {c.Value:N0} hab.");
+        }
+
+        int maxPop = cidades.Values.Max();
+        int minPop = cidades.Values.Min();
+
+        Console.WriteLine($"\nMais populosa: {cidades.First(c => c.Value == maxPop).Key}");
+        Console.WriteLine($"Menos populosa: {cidades.First(c => c.Value == minPop).Key}");
+
+        Console.Write("\nDigite um valor Y de população para remover: ");
+        int y = int.Parse(Console.ReadLine());
+
+        var paraRemover = cidades.Where(c => c.Value == y).Select(c => c.Key).ToList();
+        foreach (var key in paraRemover) cidades.Remove(key);
+
+        Console.WriteLine("\nDicionário Atualizado:");
+        foreach (var c in cidades) Console.WriteLine($"{c.Key}: {c.Value:N0} habitantes");
+    }
+}
